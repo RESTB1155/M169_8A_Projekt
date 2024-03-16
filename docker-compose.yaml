@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: remo
+      MYSQL_DATABASE: mediaWiki
+      MYSQL_USER: KMUFirma
+      MYSQL_PASSWORD: stefan
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      - mediawiki_network
+
+  mediawiki:
+    image: mediawiki:latest
+    container_name: mediawiki
+    ports:
+      - "8085:80"
+    environment:
+      MEDIAWIKI_DB_TYPE: mysql
+      MEDIAWIKI_DB_HOST: mariadb
+      MEDIAWIKI_DB_PORT: 3306
+      MEDIAWIKI_DB_NAME: mediaWiki
+      MEDIAWIKI_DB_USER: KMUFirma
+      MEDIAWIKI_DB_PASSWORD: stefan
+      MEDIAWIKI_DB_SCHEMA: mediaWiki
+    volumes:
+      - mediawiki_images:/var/www/html/images
+    networks:
+      - mediawiki_network
+
+volumes:
+  mariadb_data:
+  mediawiki_images:
+
+networks:
+  mediawiki_network:
